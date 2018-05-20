@@ -10,12 +10,15 @@
 #include "Arduino.h"
 
 // unsigned long loop_count;
-// const unsigned long loop_limit = 500000; //about 1.5 seconds
+// const unsigned long loop_limit = 300000; //about 300 mseconds
 uint16_t loop_count;
-const uint16_t loop_limit = 10000; // should take less 30 ms since each while loop takes about than 3us.
-                                //  The slowest speed of 1mm/s of the motor has a pulse duration of only 1 us
+const uint16_t loop_limit = 6000; // should take less 20 ms since each while loop takes about than 3us.
+                                //  The slowest speed of 1mm/s of the motor has a pulse duration of only 1 us,
+                                // but when the motor runs slow, 10ms is apparently not enough. 
+                                // If you intend to fix this, check raspberry pi pulse generation logic
                                 
 int pulse_previous;
+int iteration_count;
 const uint8_t motor_pin = 8; // which in PINB0
 const uint8_t dir_pin = 12; // Which is PINB4
 int pulse_read;
@@ -53,6 +56,6 @@ void loop()
             loop_count = 0; //1 cycle
         }              
     }
-    Serial.write(PINB);
+    Serial.write(PINB & 0b00010001);
     loop_count = 0;
 }
