@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.env.linux": {
+        "PATH": "/home/dheepan/.platformio/penv/bin:/home/dheepan/.platformio/penv:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/dheepan/Programs/jre-9.0.4/bin:/snap/bin",
+        "PLATFORMIO_CALLER": "vscode"
+    }
+}

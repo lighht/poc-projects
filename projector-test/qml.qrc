@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>src/main.qml</file>
+        <file>src/CustomLabel.qml</file>
+        <file>src/PageBackground.qml</file>
+        <file>src/SideBar.qml</file>
+        <file>src/SideBarForm.ui.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>src/ScopeView.qml</file>
+    </qresource>
+</RCC>
