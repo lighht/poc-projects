@@ -5,6 +5,7 @@
 
 #include <QtCore/QObject>
 #include <QtCharts/QAbstractSeries>
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 class QQuickView;
@@ -29,8 +30,8 @@ public slots:
     Q_INVOKABLE void updateData(QAbstractSeries *pwmSeries, QAbstractSeries *msSeries);
 
 private:
-    PowerMeterScanner *m_pwm;
-    MotorStateScanner *m_ms;
+    std::unique_ptr<PowerMeterScanner> m_pwm;
+    std::unique_ptr<MotorStateScanner> m_ms;
     QVector<QPointF> m_pwm_points;
     QVector<QPointF> m_ms_points;
     double m_index;

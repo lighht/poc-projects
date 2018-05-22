@@ -49,12 +49,20 @@ Q_DECLARE_METATYPE(QAbstractAxis *)
 const uint8_t POINTS = 255;
 DataSource::DataSource(QObject *parent) :
     QObject(parent),
-    m_pwm(new PowerMeterScanner(this)),
-    m_ms(new MotorStateScanner(this)),
     m_index(0),
     m_ms_value(0),
     m_pwm_value(0)
 {
+    try {
+        m_pwm = std::make_unique<PowerMeterScanner>(this);
+    } catch (std::exception) {
+        m_pwm = nullptr;
+    }
+    try {
+        m_ms = std::make_unique<MotorStateScanner>(this);
+    } catch (std::exception) {
+        m_ms = nullptr;
+    }
     qRegisterMetaType<QAbstractSeries*>();
     qRegisterMetaType<QAbstractAxis*>();
     m_pwm_points.reserve(POINTS);
@@ -72,7 +80,17 @@ void DataSource::updatePowerMeterData(QAbstractSeries *series)
     QXYSeries *xySeries = static_cast<QXYSeries *>(series);
     qreal x(0);
     qreal y(0);
-    m_pwm_value = m_pwm->get_reading();//qSin(M_PI / 50 * m_index) + 0.5 + QRandomGenerator::global()->generateDouble();
+
+    if(m_pwm!=nullptr){
+        try{
+            m_pwm_value = m_pwm->get_reading();//qSin(M_PI / 50 * m_index) + 0.5 + QRandomGenerator::global()->generateDouble();
+        } catch(std::exception){
+            m_pwm_value = 0;
+        }
+    }
+    else{
+        m_pwm_value = 0;
+    }
     y = m_pwm_value;
     x = m_index;
 
@@ -91,12 +109,23 @@ void DataSource::updateMotorScannerData(QAbstractSeries *series){
     qreal x(0);
     qreal y(0);
     //This if else can be optimized
-    if(m_ms->getIsMotorActive()){
-        m_ms_value = m_ms->getMotorDir()?1:-1;
+    if(m_ms!=nullptr){
+        try {
+            if(m_ms->getIsMotorActive()){
+                m_ms_value = m_ms->getMotorDir()?1:-1;
+            }
+            else{
+                m_ms_value = 0;
+            }
+        } catch (std::exception) {
+            m_ms_value = -2;
+        }
     }
     else{
-        m_ms_value = 0;
+        m_ms_value = -2;
     }
+
+
     x = m_index;
     y = m_ms_value;
     if(m_index < POINTS){
